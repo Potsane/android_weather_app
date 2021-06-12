@@ -5,6 +5,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.potsane.potsaneweatherapp.BuildConfig
 import com.potsane.potsaneweatherapp.PotsaneWeatherApp
+import com.potsane.potsaneweatherapp.common.threading.DispatcherProvider
+import com.potsane.potsaneweatherapp.common.threading.DispatcherProviderImpl
+import com.potsane.potsaneweatherapp.network.WeatherInfoService
+import com.potsane.potsaneweatherapp.repository.WeatherInfoRepository
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,6 +51,17 @@ object Injector {
     private val applicationContext: Context
         get() = PotsaneWeatherApp.getAppContext()!!
 
+    private val dispatcherProvider: DispatcherProvider
+        get() = DispatcherProviderImpl()
+
+    private val weatherInfoService: WeatherInfoService
+        get() = retrofit.create(WeatherInfoService::class.java)
+
     val fusedLocationClient: FusedLocationProviderClient
         get() = LocationServices.getFusedLocationProviderClient(applicationContext)
+
+    val weatherInfoRepository: WeatherInfoRepository
+        get() = WeatherInfoRepository(dispatcherProvider, weatherInfoService)
+
+
 }

@@ -11,14 +11,14 @@ data class DailyWeatherInfo(
     val date: Long,
 
     @SerializedName("humidity")
-    val humidity: Int,
+    val humidity: Double,
 
     @SerializedName("uvi")
-    val uvi: Int,
+    val uvi: Double,
 
     @SerializedName("wind_speed")
     val windSpeed: Double,
 
     @SerializedName("weather")
-    val weather: Weather
+    val weather: List<Weather>
 )

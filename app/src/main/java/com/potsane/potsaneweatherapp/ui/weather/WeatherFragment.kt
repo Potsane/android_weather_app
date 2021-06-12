@@ -73,6 +73,7 @@ class WeatherFragment :
                             requireContext()
                         )
                         println(address)
+                        viewModel.fetchWeatherInfo(address = address!![0])
                     }
                 }
         }
