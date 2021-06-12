@@ -39,7 +39,7 @@ object Injector {
 
     private val retrofit: Retrofit
         get() = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(BuildConfig.WEATHER_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

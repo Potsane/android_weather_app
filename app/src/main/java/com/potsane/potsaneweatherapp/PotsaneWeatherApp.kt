@@ -3,14 +3,14 @@ package com.potsane.potsaneweatherapp
 import android.app.Application
 import android.content.Context
 import com.google.android.libraries.places.api.Places
-import com.potsane.potsaneweatherapp.BuildConfig.CITIES_API_KEY
+import com.potsane.potsaneweatherapp.BuildConfig.PLACES_API_KEY
 
 class PotsaneWeatherApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        Places.initialize(applicationContext, CITIES_API_KEY)
+        Places.initialize(applicationContext, PLACES_API_KEY)
 
     }
 

@@ -1,5 +1,6 @@
 package com.potsane.potsaneweatherapp.util
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,6 +11,10 @@ import androidx.core.content.ContextCompat
 object PermissionsUtil {
 
     const val REQUEST_LOCATION_PERMISSION = 1
+    private val locationPermissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
     private fun hasPermission(permission: String, context: Context?): Boolean {
         return when {
@@ -24,8 +29,8 @@ object PermissionsUtil {
         }
     }
 
-    fun hasPermissions(permissions: Array<String>, context: Context?): Boolean {
-        for (permission in permissions) {
+    fun hasLocationPermissions(context: Context?): Boolean {
+        for (permission in locationPermissions) {
             if (!hasPermission(permission, context)) {
                 return false
             }
@@ -33,9 +38,9 @@ object PermissionsUtil {
         return true
     }
 
-    fun requestPermissions(activity: Activity, permissions: Array<String>, requestCode: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions.isNotEmpty()) {
-            ActivityCompat.requestPermissions(activity, permissions, requestCode)
+    fun requestLocationPermissions(activity: Activity, requestCode: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(activity, locationPermissions, requestCode)
         }
     }
 }
