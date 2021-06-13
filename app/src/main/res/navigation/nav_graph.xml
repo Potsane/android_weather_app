@@ -9,4 +9,15 @@
         android:id="@+id/weatherFragment"
         android:name="com.potsane.potsaneweatherapp.ui.weather.WeatherFragment"
         android:label="WeatherFragment" />
+
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.potsane.potsaneweatherapp.ui.location.LocationsFragment"
+        tools:layout="@layout/fragment_locations" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.potsane.potsaneweatherapp.ui.settings.SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
+
 </navigation>

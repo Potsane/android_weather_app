@@ -21,7 +21,7 @@ android {
 
         buildConfigField 'String', 'WEATHER_BASE_URL', "\"https://api.openweathermap.org/data/2.5/\""
         buildConfigField 'String', 'WEATHER_API_KEY', "\"0590ee68b3a6543a36961ad045d7e1ac\""
-        buildConfigField 'String', 'PLACES_API_KEY', "\"AIzaSyAw1TsbaQFCYDeKHYGv8eBxjdzJiTivmT8\""
+        buildConfigField 'String', 'PLACES_API_KEY', "\"AIzaSyBXWA42CWX3dEQK2kwmkZGQR0dtzN3VZaA\""
 
         multiDexEnabled true
     }

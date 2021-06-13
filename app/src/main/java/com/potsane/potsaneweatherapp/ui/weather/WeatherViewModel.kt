@@ -26,18 +26,10 @@ class WeatherViewModel(
     fun fetchWeatherInfo(address: Address?) {
         viewModelScope.launch {
             address?.let {
-                weatherInfoRepository.maybeFetchWeatherInfo(address).let {
-                    if (it.isSuccessful) {
-                        it.body()?.let { weatherResponseItem ->
-                            _weatherInfo.value = weatherResponseItem
-                            _locationName.value = address.locality
-                            _extraWeatherDetail.value = extractExtraWeatherDetails(
-                                weatherResponseItem.currentWeatherInfo
-                            )
-                        } ?: run {} //show erro
-                    } else {
-                        //showError
-                    }
+                weatherInfoRepository.fetchWeatherInfo(address).let {
+                    _weatherInfo.value = it
+                    _locationName.value = address.locality
+                    _extraWeatherDetail.value = extractExtraWeatherDetails(it?.currentWeatherInfo)
                 }
             } ?: run { /*showError*/ }
         }

@@ -1,12 +1,15 @@
 package com.potsane.potsaneweatherapp.injection
 
 import android.content.Context
+import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.potsane.potsaneweatherapp.BuildConfig
 import com.potsane.potsaneweatherapp.PotsaneWeatherApp
 import com.potsane.potsaneweatherapp.common.threading.DispatcherProvider
 import com.potsane.potsaneweatherapp.common.threading.DispatcherProviderImpl
+import com.potsane.potsaneweatherapp.database.WeatherAppDatabase
+import com.potsane.potsaneweatherapp.database.WeatherInfoDao
 import com.potsane.potsaneweatherapp.network.WeatherInfoService
 import com.potsane.potsaneweatherapp.repository.WeatherInfoRepository
 import okhttp3.Interceptor
@@ -57,11 +60,19 @@ object Injector {
     private val weatherInfoService: WeatherInfoService
         get() = retrofit.create(WeatherInfoService::class.java)
 
+    private val weatherInfoDao: WeatherInfoDao
+        get() = dataBase.weatherInfoDao()
+
+    private val dataBase: WeatherAppDatabase
+        get() = Room.databaseBuilder(
+            applicationContext,
+            WeatherAppDatabase::class.java,
+            "WeatherApp-DB"
+        ).build()
+
     val fusedLocationClient: FusedLocationProviderClient
         get() = LocationServices.getFusedLocationProviderClient(applicationContext)
 
     val weatherInfoRepository: WeatherInfoRepository
-        get() = WeatherInfoRepository(dispatcherProvider, weatherInfoService)
-
-
+        get() = WeatherInfoRepository(dispatcherProvider, weatherInfoService,weatherInfoDao )
 }
