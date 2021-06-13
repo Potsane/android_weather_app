@@ -9,6 +9,7 @@ import com.potsane.potsaneweatherapp.repository.WeatherInfoRepository
 import com.potsane.potsaneweatherapp.ui.base.BaseWeatherAppViewModel
 import com.potsane.potsaneweatherapp.ui.base.HideProgressBar
 import com.potsane.potsaneweatherapp.ui.base.ShowProgressBar
+import com.potsane.potsaneweatherapp.ui.base.ShowSnackBar
 import com.potsane.potsaneweatherapp.util.extractExtraWeatherDetails
 import kotlinx.coroutines.launch
 
@@ -35,7 +36,7 @@ class WeatherViewModel(
                     _extraWeatherDetail.value = extractExtraWeatherDetails(it?.currentWeatherInfo)
                 }
                 postUiEvent(HideProgressBar())
-            } ?: run { /*showError*/ }
+            } ?: run { postUiEvent(ShowSnackBar("An error has occurred, please try again")) }
         }
     }
 

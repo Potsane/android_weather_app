@@ -21,5 +21,20 @@ fun getDayNameFromDate(textView: TextView,value: Long) {
     val sdf = SimpleDateFormat("EEEE")
     val dateFormat = Date(value * 1000)
     val weekday = sdf.format(dateFormat)
-    textView.text = weekday
+
+    val label = if (!isToday(value)) weekday else "Today"
+    textView.text = label
+}
+
+fun isToday(date: Long): Boolean {
+    val epochInMillis: Long = date * 1000
+    val now = Calendar.getInstance()
+    val timeToCheck = Calendar.getInstance()
+    timeToCheck.timeInMillis = epochInMillis
+    if (now[Calendar.YEAR] === timeToCheck[Calendar.YEAR]) {
+        if (now[Calendar.DAY_OF_YEAR] === timeToCheck[Calendar.DAY_OF_YEAR]) {
+            return true
+        }
+    }
+    return false
 }

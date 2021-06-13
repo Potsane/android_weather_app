@@ -11,7 +11,7 @@
         android:title="Locations" />
 
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/aboutFragment"
         android:icon="@drawable/ic_baseline_settings_24"
-        android:title="Settings" />
+        android:title="About" />
 </menu>

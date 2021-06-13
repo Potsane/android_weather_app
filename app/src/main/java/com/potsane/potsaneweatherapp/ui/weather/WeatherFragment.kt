@@ -3,11 +3,12 @@ package com.potsane.potsaneweatherapp.ui.weather
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.potsane.potsaneweatherapp.R
-import com.potsane.potsaneweatherapp.common.ui.showDialog
+import com.potsane.potsaneweatherapp.common.ui.DialogBuilder
 import com.potsane.potsaneweatherapp.databinding.FragmentWeatherBinding
 import com.potsane.potsaneweatherapp.entity.view.LocationInfo
 import com.potsane.potsaneweatherapp.injection.Injector
@@ -28,13 +29,34 @@ class WeatherFragment :
         )
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            PermissionsUtil.REQUEST_LOCATION_PERMISSION ->
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    getLocationName()
+                } else {
+                    DialogBuilder.showMissingPermissionsDialog(
+                        requireContext(),
+                        DialogInterface.OnClickListener { _, _ -> openPermissions() },
+                        DialogInterface.OnClickListener { _, _ -> closeApp() }
+                    )
+                    //displaySnackBar("Cant get weather updates without your permission")
+                }
+        }
+    }
+
     override fun onUiEvents(event: Any) {
         super.onUiEvents(event)
     }
 
     override fun onResume() {
         super.onResume()
-        handleProgressBar(true)
         val currentLocation = arguments?.getParcelable<LocationInfo>("locationInfo")
         currentLocation?.let {
             viewModel.fetchWeatherInfo(it)
@@ -45,10 +67,7 @@ class WeatherFragment :
         if (isOnline(requireActivity())) {
             getLocation()
         } else {
-            showDialog(
-                getString(R.string.dialog_title_no_network),
-                getString(R.string.dialog_message_no_network),
-                getString(R.string.dialog_positive_button_no_network),
+            DialogBuilder.showNetworkFailureDialog(
                 requireContext(),
                 DialogInterface.OnClickListener { _, _ ->
                     val intent = Intent(Settings.ACTION_WIRELESS_SETTINGS)
