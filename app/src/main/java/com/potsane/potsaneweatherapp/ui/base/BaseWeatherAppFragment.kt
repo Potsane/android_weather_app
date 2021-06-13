@@ -9,6 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.potsane.potsaneweatherapp.BR
 
 abstract class BaseWeatherAppFragment<VM : BaseWeatherAppViewModel, VDB : ViewDataBinding> :
@@ -29,9 +30,25 @@ abstract class BaseWeatherAppFragment<VM : BaseWeatherAppViewModel, VDB : ViewDa
             container,
             false
         )
+        return binding.root
+    }
+
+    @CallSuper
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.setVariable(BR.viewModel, viewModel)
-        return binding.root
+
+        viewModel.uiEvents.observe(viewLifecycleOwner, Observer(::onUiEvents))
+    }
+
+    @CallSuper
+    protected open fun onUiEvents(event : Any){
+        when(event){
+            is ShowProgressBar -> handleProgressBar(true)
+            is HideProgressBar -> handleProgressBar(false)
+        }
     }
 
     @LayoutRes

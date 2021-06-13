@@ -3,19 +3,25 @@ package com.potsane.potsaneweatherapp.ui.location
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import androidx.core.os.bundleOf
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.potsane.potsaneweatherapp.R
-import com.potsane.potsaneweatherapp.common.showDialog
-import com.potsane.potsaneweatherapp.common.ui.showSnackBar
+import com.potsane.potsaneweatherapp.common.ui.showDialog
+//import com.potsane.potsaneweatherapp.common.ui.showSnackBar
 import com.potsane.potsaneweatherapp.databinding.FragmentLocationsBinding
+import com.potsane.potsaneweatherapp.entity.view.LocationInfo
 import com.potsane.potsaneweatherapp.ui.base.BaseWeatherAppFragment
 import com.potsane.potsaneweatherapp.ui.base.MainActivity
 import com.potsane.potsaneweatherapp.util.PermissionsUtil
@@ -31,21 +37,36 @@ class LocationsFragment :
             .get(LocationsViewModel::class.java)
     }
 
+   /* override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.uiEvents.observe(viewLifecycleOwner, Observer(::onUiEvents))
+    }*/
+
+    override fun onUiEvents(event: Any) {
+        when (event) {
+            is ShowWeatherInfoForLocation -> showLocationWeatherDetails(event.locationInfo)
+            is DeleteWeatherInfoForLocation -> showDeleteLocationDialog(event.locationInfo)
+            else -> super.onUiEvents(event)
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PermissionsUtil.REQUEST_LOCATION_PERMISSION) {
+        if (requestCode == PermissionsUtil.PLACES_REQUEST) {
             when (resultCode) {
                 Activity.RESULT_OK -> {
                     val place = Autocomplete.getPlaceFromIntent(data!!)
-                  /*  showLocationWeatherDetails(
-                        LocationViewItem(
-                            "${place.latLng?.latitude},${place.latLng?.longitude}",
-                            place.name!!
+                    showLocationWeatherDetails(
+                        LocationInfo(
+                            //Making a safe bet that places will return value
+                            place.name!!,
+                            place.latLng?.latitude!!,
+                            place.latLng?.longitude!!
                         )
-                    )*/
+                    )
                 }
                 AutocompleteActivity.RESULT_ERROR -> {
                     val status: Status = Autocomplete.getStatusFromIntent(data!!)
-                    showSnackBar(binding.root, "An error has occurred, please try again")
+                    //showSnackBar(binding.root, "An error has occurred, please try again")
                 }
                 Activity.RESULT_CANCELED -> {
                 }
@@ -71,7 +92,7 @@ class LocationsFragment :
             onSearchCalled()
             true
         } else {
-            //findNavController().navigate(R.id.action_LocationFragment_to_WeatherFragment)
+            findNavController().navigate(R.id.action_locationFragment_to_weatherFragment)
             true
         }
     }
@@ -81,20 +102,23 @@ class LocationsFragment :
         val intent = Autocomplete.IntentBuilder(
             AutocompleteActivityMode.FULLSCREEN, fields
         ).build(requireContext())
-        startActivityForResult(intent, PermissionsUtil.REQUEST_LOCATION_PERMISSION)
+        startActivityForResult(intent, PermissionsUtil.PLACES_REQUEST)
     }
 
-    private fun showDeleteLocationDialog(/*userLocationEntity: UserLocationEntity*/) {
+    private fun showDeleteLocationDialog(locationInfo: LocationInfo) {
         showDialog(
             getString(R.string.dialog_title_delete_location),
             getString(R.string.dialog_message_delete_location),
             getString(R.string.dialog_positive_button_delete_location),
             requireContext(),
             DialogInterface.OnClickListener { _, _ ->
-                //viewModel.deleteLocation(userLocationEntity)
+                viewModel.deleteLocation(locationInfo)
             }
         )
     }
 
-
+    private fun showLocationWeatherDetails(locationInfo: LocationInfo) {
+        val bundle = bundleOf("locationInfo" to locationInfo)
+        findNavController().navigate(R.id.action_locationFragment_to_weatherFragment, bundle)
+    }
 }

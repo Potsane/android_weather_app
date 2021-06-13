@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 object PermissionsUtil {
 
     const val REQUEST_LOCATION_PERMISSION = 1
+    const val PLACES_REQUEST = 2
+
     private val locationPermissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION

@@ -7,8 +7,9 @@ import android.provider.Settings
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.potsane.potsaneweatherapp.R
-import com.potsane.potsaneweatherapp.common.showDialog
+import com.potsane.potsaneweatherapp.common.ui.showDialog
 import com.potsane.potsaneweatherapp.databinding.FragmentWeatherBinding
+import com.potsane.potsaneweatherapp.entity.view.LocationInfo
 import com.potsane.potsaneweatherapp.injection.Injector
 import com.potsane.potsaneweatherapp.ui.base.BaseWeatherAppFragment
 import com.potsane.potsaneweatherapp.util.LocationUtils
@@ -27,9 +28,17 @@ class WeatherFragment :
         )
     }
 
+    override fun onUiEvents(event: Any) {
+        super.onUiEvents(event)
+    }
+
     override fun onResume() {
         super.onResume()
-        init()
+        handleProgressBar(true)
+        val currentLocation = arguments?.getParcelable<LocationInfo>("locationInfo")
+        currentLocation?.let {
+            viewModel.fetchWeatherInfo(it)
+        } ?: run { init() }
     }
 
     private fun init() {
@@ -67,13 +76,13 @@ class WeatherFragment :
             Injector.fusedLocationClient.lastLocation
                 .addOnSuccessListener {
                     it.let {
-                        val address = LocationUtils.getLocationName(
+                        val locationInfo = LocationUtils.getLocalizedLocationInfo(
                             it.latitude,
                             it.longitude,
                             requireContext()
                         )
-                        println(address)
-                        viewModel.fetchWeatherInfo(address = address!![0])
+                        println(locationInfo)
+                        viewModel.fetchWeatherInfo(locationInfo)
                     }
                 }
         }

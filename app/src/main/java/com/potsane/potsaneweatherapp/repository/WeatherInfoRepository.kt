@@ -1,11 +1,11 @@
 package com.potsane.potsaneweatherapp.repository
 
-import android.location.Address
 import com.potsane.potsaneweatherapp.BuildConfig
 import com.potsane.potsaneweatherapp.common.threading.DispatcherProvider
 import com.potsane.potsaneweatherapp.database.WeatherInfoDao
 import com.potsane.potsaneweatherapp.database.WeatherInfoEntity
 import com.potsane.potsaneweatherapp.entity.api.WeatherResponseItem
+import com.potsane.potsaneweatherapp.entity.view.LocationInfo
 import com.potsane.potsaneweatherapp.network.WeatherInfoService
 import com.potsane.potsaneweatherapp.util.needsToRefresh
 import kotlinx.coroutines.withContext
@@ -16,45 +16,61 @@ class WeatherInfoRepository(
     private val weatherInfoDao: WeatherInfoDao
 ) {
 
-    suspend fun fetchWeatherInfo(address: Address): WeatherResponseItem? {
+    suspend fun fetchWeatherInfo(locationInfo: LocationInfo): WeatherResponseItem? {
         var weatherInfo: WeatherResponseItem? = null
         withContext(dispatcherProvider.io()) {
-            fetchWeatherInfoFromDb(address)?.let {
+            fetchWeatherInfoFromDb(locationInfo)?.let {
                 weatherInfo = if (needsToRefresh(it.storageTimestamp)) {
-                    fetchWeatherInfoFromService(address)
+                    fetchWeatherInfoFromService(locationInfo)
                 } else {
                     it.weatherResponseItem
                 }
             } ?: run {
-                weatherInfo = fetchWeatherInfoFromService(address)
+                weatherInfo = fetchWeatherInfoFromService(locationInfo)
             }
         }
         return weatherInfo
     }
 
-    private suspend fun fetchWeatherInfoFromService(address: Address): WeatherResponseItem? {
+    private suspend fun fetchWeatherInfoFromService(locationInfo: LocationInfo): WeatherResponseItem? {
         val weatherInfo: WeatherResponseItem? = weatherInfoService.getWeatherInfo(
-            address.latitude,
-            address.longitude,
+            locationInfo.lat,
+            locationInfo.lon,
             BuildConfig.WEATHER_API_KEY
         ).body()
-        persistWeatherInfo(weatherInfo, address)
+        persistWeatherInfo(weatherInfo, locationInfo)
         return weatherInfo
     }
 
-    private suspend fun fetchWeatherInfoFromDb(address: Address): WeatherInfoEntity? {
-        return weatherInfoDao.searchLocationWeatherInfo(address.locality)
+    private suspend fun fetchWeatherInfoFromDb(locationInfo: LocationInfo): WeatherInfoEntity? {
+        return weatherInfoDao.searchLocationWeatherInfo(locationInfo.locationName)
+    }
+
+    suspend fun fetchWeatherInfoForAllLocations() = withContext(dispatcherProvider.io()) {
+        weatherInfoDao.getWeatherInfoForAllLocations()
+    }
+
+    suspend fun deleteWeatherInfoForLocation(locationInfo: LocationInfo): List<WeatherInfoEntity> {
+        var updatedWeatherInfoForLocations = listOf<WeatherInfoEntity>()
+        withContext(dispatcherProvider.io()) {
+            weatherInfoDao.deleteWeatherInfoForLocation(locationInfo.locationName)
+            weatherInfoDao.getWeatherInfoForAllLocations()?.let {
+                updatedWeatherInfoForLocations = it
+            }
+        }
+        return updatedWeatherInfoForLocations
     }
 
     private suspend fun persistWeatherInfo(
         weatherInfo: WeatherResponseItem?,
-        address: Address
+        locationInfo: LocationInfo
     ) {
         weatherInfo?.let {
             val weatherInfoEntity = WeatherInfoEntity(
-                address.locality,
+                locationInfo.locationName,
                 it,
-                System.currentTimeMillis()
+                System.currentTimeMillis(),
+                locationInfo
             )
             weatherInfoDao.insertWeatherInfo(weatherInfoEntity)
         }

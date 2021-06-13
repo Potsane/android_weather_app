@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [WeatherInfoEntity::class],
-    version = 3
+    version = 4
 )
 
 @TypeConverters(EntityConverters::class)

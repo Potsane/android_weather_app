@@ -38,7 +38,7 @@ fun <T> setForecastItems(
             )
         }
         onLocationItemClickListener?.let {
-            //binding?.setVariable(BR.clickListener, it)
+            binding?.setVariable(BR.clickListener, it)
         }
         binding?.setVariable(BR.item, item)
         binding?.executePendingBindings()

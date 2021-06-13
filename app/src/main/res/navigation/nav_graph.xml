@@ -8,16 +8,28 @@
     <fragment
         android:id="@+id/weatherFragment"
         android:name="com.potsane.potsaneweatherapp.ui.weather.WeatherFragment"
-        android:label="WeatherFragment" />
+        android:label="WeatherFragment">
+        <argument
+            android:name="locationInfo"
+            app:argType="com.potsane.potsaneweatherapp.entity.view.LocationInfo" />
+    </fragment>
 
     <fragment
         android:id="@+id/locationFragment"
         android:name="com.potsane.potsaneweatherapp.ui.location.LocationsFragment"
-        tools:layout="@layout/fragment_locations" />
+        tools:layout="@layout/fragment_locations">
+        <action
+            android:id="@+id/action_locationFragment_to_weatherFragment"
+            app:destination="@id/weatherFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.potsane.potsaneweatherapp.ui.settings.SettingsFragment"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_weatherFragment"
+            app:destination="@id/weatherFragment" />
+    </fragment>
 
 </navigation>

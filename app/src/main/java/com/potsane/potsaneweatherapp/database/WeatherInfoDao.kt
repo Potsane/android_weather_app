@@ -13,4 +13,10 @@ interface WeatherInfoDao {
 
     @Query("SELECT * FROM weatherinfoentity WHERE location_name =:locationName")
     suspend fun searchLocationWeatherInfo(locationName: String): WeatherInfoEntity?
+
+    @Query("SELECT * FROM weatherinfoentity")
+    suspend fun getWeatherInfoForAllLocations() : List<WeatherInfoEntity>?
+
+    @Query("DELETE FROM weatherinfoentity WHERE location_name =:locationName")
+    suspend fun deleteWeatherInfoForLocation(locationName: String)
 }

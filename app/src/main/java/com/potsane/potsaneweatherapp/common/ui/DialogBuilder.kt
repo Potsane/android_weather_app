@@ -1,4 +1,4 @@
-package com.potsane.potsaneweatherapp.common
+package com.potsane.potsaneweatherapp.common.ui
 
 import android.content.Context
 import android.content.DialogInterface

@@ -68,11 +68,11 @@ object Injector {
             applicationContext,
             WeatherAppDatabase::class.java,
             "WeatherApp-DB"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
 
     val fusedLocationClient: FusedLocationProviderClient
         get() = LocationServices.getFusedLocationProviderClient(applicationContext)
 
     val weatherInfoRepository: WeatherInfoRepository
-        get() = WeatherInfoRepository(dispatcherProvider, weatherInfoService,weatherInfoDao )
+        get() = WeatherInfoRepository(dispatcherProvider, weatherInfoService, weatherInfoDao)
 }
