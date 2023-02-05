@@ -20,8 +20,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'WEATHER_BASE_URL', "\"https://api.openweathermap.org/data/2.5/\""
-        buildConfigField 'String', 'WEATHER_API_KEY', "\"0590ee68b3a6543a36961ad045d7e1ac\""
-        buildConfigField 'String', 'PLACES_API_KEY', "\"AIzaSyBXWA42CWX3dEQK2kwmkZGQR0dtzN3VZaA\""
+        buildConfigField 'String', 'WEATHER_API_KEY', "replace with valid openweather-map key"
+        buildConfigField 'String', 'PLACES_API_KEY', "replace with valid Google places key"
 
         multiDexEnabled true
     }
