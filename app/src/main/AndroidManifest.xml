@@ -2,15 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.potsane.potsaneweatherapp">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".PotsaneWeatherApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PotsaneWeatherApp">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBXWA42CWX3dEQK2kwmkZGQR0dtzN3VZaA" />
+
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.base.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.PotsaneWeatherApp.NoActionBar">
             <intent-filter>
