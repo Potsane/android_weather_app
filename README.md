@@ -3,7 +3,7 @@ This is a simple Weather App that uses the OpenWeatherMap and the Google Places 
 It is a demonstation of how to use and implement modern Android development tools, Room, MVVM, Livedata & Kotlin
 
 ## GETTING STARTED
-Open the Project level `build.gradle` file, navigatio to the `defaultConfig` section and enter your Googple Places & OpenWeatherMap API keys
+Open the app module `build.gradle` file, navigatio to the `defaultConfig` section and enter your Googple Places & OpenWeatherMap API keys
 ```
    buildConfigField 'String', 'WEATHER_API_KEY', "replace with valid openweather-map key"
    buildConfigField 'String', 'PLACES_API_KEY', "replace with valid Google places key"
