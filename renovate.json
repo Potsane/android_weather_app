@@ -2,5 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
-  ]
+  ],
+  "schedule": [
+    "after 10pm and before 3am every weekend"
+  ],
+  "timezone": "Africa/Johannesburg"
 }
