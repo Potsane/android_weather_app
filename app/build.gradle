@@ -88,7 +88,7 @@ dependencies {
 
     implementation "androidx.room:room-runtime:2.3.0"
     kapt "androidx.room:room-compiler:2.6.1"
-    implementation "androidx.room:room-ktx:2.3.0"
+    implementation "androidx.room:room-ktx:2.6.1"
 
     implementation 'com.squareup.moshi:moshi:1.11.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
